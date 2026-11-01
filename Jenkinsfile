@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'branch', defaultValue: 'main', description: 'GitHub branch')
-        choice(name: 'environment', choices: ['staging', 'production'], description: 'Deployment env')
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'GitHub branch to build')
+        choice(name: 'DEPLOY_ENV', choices: ['staging', 'production'], description: 'Target deployment environment')
     }
 
     environment {
         AWS_ACCOUNT_ID = '226817436986'
         AWS_REGION     = 'us-east-1'
         REPO_NAME      = 'cloudbox-app'
-        IMAGE_TAG      = "${params.branch}-${BUILD_NUMBER}"
+        IMAGE_TAG      = "${params.BRANCH_NAME}-${BUILD_NUMBER}"
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
 
         stage('Registry Login') {
             steps {
-                // This logs Jenkins into your AWS registry directly on the Linux runner
+                // This complete line ensures your account ID is linked correctly to the login registry
                 sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
             }
         }
