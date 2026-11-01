@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
-  cloudbox-app:
-    image: ://amazonaws.com{IMAGE_TAG}
+  cloudbox:
+    image: ${REGISTRY_URL}/${REPO_NAME}:${IMAGE_TAG}
+    container_name: cloudbox_${DEPLOY_ENV:-production}
     ports:
-      - "${APP_PORT}:80"
+      - "${HOST_PORT:-80}:80"
     restart: always
